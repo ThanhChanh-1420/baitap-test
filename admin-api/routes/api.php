@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\BookManagementController;
 */
 
 Route::get('book', [BookManagementController::class, 'index']); 
+Route::get('book-paginate', [BookManagementController::class, 'indexPaginate']);
 Route::post('/add-book', [BookManagementController::class, 'store']);
 Route::get('/get-book/{id}', [BookManagementController::class, 'show']);
 Route::put('/update-book/{id}', [BookManagementController::class, 'update']);

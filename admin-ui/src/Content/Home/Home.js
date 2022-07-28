@@ -3,6 +3,7 @@ import "aos/dist/aos.css";
 import axios from 'axios';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import Pagination from "react-js-pagination";
 
 class Home extends Component {
     constructor(props) {
@@ -14,14 +15,21 @@ class Home extends Component {
     }
 
     async componentDidMount() {
-        const res = await axios.get("http://127.0.0.1:8000/api/book");
-        //console.log(res);
-        if (res.data.status === 200) {
-            this.setState({
-                books: res.data.books,
-                loading: false,
-            });
-        }
+        const api = await axios.get(`http://127.0.0.1:8000/api/book-paginate?page=${1}`);
+        //console.log(api.data.books);
+        this.setState({
+            books: await api.data.books,
+            loading: false,
+        })
+        console.log(this.state.books.data);
+        // const res = await axios.get("http://127.0.0.1:8000/api/book");
+        // //console.log(res);
+        // if (res.data.status === 200) {
+        //     this.setState({
+        //         books: res.data.books,
+        //         loading: false,
+        //     });
+        // }
     }
 
     deleteBook = async (e, id) => {
@@ -46,7 +54,7 @@ class Home extends Component {
                 </tr>
             );
         } else {
-            book_HTMLTABLE = this.state.books.map((item, i) => {
+            book_HTMLTABLE = this.state.books.data.map((item, i) => {
                 return (
                     <tr key={item.id}>
                         <td>{i + 1}</td>
@@ -118,6 +126,23 @@ class Home extends Component {
                                         {book_HTMLTABLE}
                                     </tbody>
                                 </table>
+                                <Pagination
+                                    activePage={this.state?.books?.current_page ? this.state?.books?.current_page : 0}
+                                    itemsCountPerPage={this.state?.books?.per_page ? this.state?.books?.per_page : 0}
+                                    totalItemsCount={this.state?.books?.total ? this.state?.books?.total : 0}
+                                    onChange={async (pageNumber) => {
+                                        const api = await axios.get(`http://127.0.0.1:8000/api/book-paginate?page=${pageNumber}`);
+                                        this.setState({
+                                            books: await api.data.books,
+                                            loading: false,
+                                        })
+                                    }}
+                                    pageRangeDisplayed={8}
+                                    itemClass="page-item"
+                                    linkClass="page-link"
+                                    firstPageText="First Page"
+                                    lastPageText="Last Lage"
+                                />
                             </div>
                         </div>
                         <div className='col-lg-2 dino__content'></div>

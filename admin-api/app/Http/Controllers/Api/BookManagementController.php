@@ -12,6 +12,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BookManagementController extends Controller
 {
+    public function indexPaginate()
+    {
+        $books = Book::paginate(3);
+        // return $this->sendResponse(BookResource::collection($books), 'Index Book Successful');
+        return response()->json([
+            'status' => 200,
+            'books' => $books
+        ]);
+    }
     /**
      * Display a listing of the resource.
      *
